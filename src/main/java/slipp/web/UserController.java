@@ -16,8 +16,9 @@ public class UserController {
 	
 	@GetMapping("/users/{index}")
 	public ModelAndView show(@PathVariable int index) {
-		User user = users.get(0);
-		return null;
+		ModelAndView mav = new ModelAndView("user/profile");
+		mav.addObject("user", users.get(index));
+		return mav;
 	}
 	
 	@GetMapping("/users")
