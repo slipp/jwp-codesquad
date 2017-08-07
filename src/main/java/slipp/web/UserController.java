@@ -1,37 +1,41 @@
 package slipp.web;
 
-import java.util.ArrayList;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import slipp.domain.User;
+import slipp.domain.UserRepository;
 
 @Controller
+@RequestMapping("/users")
 public class UserController {
-	ArrayList<User> users = new ArrayList<>();
+	static final String USER_PATH = "/users";
 	
-	@GetMapping("/users/{index}")
-	public ModelAndView show(@PathVariable int index) {
+	@Autowired
+	UserRepository userRepository;
+	
+	@GetMapping("/{id}")
+	public ModelAndView show(@PathVariable Long id) {
 		ModelAndView mav = new ModelAndView("user/profile");
-		mav.addObject("user", users.get(index));
+		mav.addObject("user", userRepository.findOne(id));
 		return mav;
 	}
 	
-	@GetMapping("/users")
+	@GetMapping("")
 	public ModelAndView list() {
 		ModelAndView mav = new ModelAndView("user/list");
-		mav.addObject("users", users);
+		mav.addObject("users", userRepository.findAll());
 		return mav;
 	}
 	
-	@PostMapping("/users")
+	@PostMapping("")
 	public ModelAndView create(User user) {	
-		users.add(user);
-		System.out.println("size : " + users.size());
+		userRepository.save(user);
 		
 		return new ModelAndView("redirect:/users");
 	}

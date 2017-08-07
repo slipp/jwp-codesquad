@@ -1,10 +1,34 @@
 package slipp.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class User {
+	@Id
+	@GeneratedValue
+	Long id;
+	
+	@Column(name="u_id", nullable=false, unique=true, length=25)
 	String userId;
+		
+	@Column(nullable=false, length=25)
 	String password;
+
+	@Column(nullable=false, length=25)
 	String name;
+	
+	@Column(length=50)
 	String email;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	public String getUserId() {
 		return userId;
 	}
