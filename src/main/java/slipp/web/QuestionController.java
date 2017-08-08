@@ -1,7 +1,6 @@
 package slipp.web;
 
-import java.util.ArrayList;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,23 +8,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import slipp.domain.Question;
+import slipp.domain.QuestionRepository;
 
 @Controller
 public class QuestionController {
-	public static ArrayList<Question> questions = new ArrayList<>();
+	@Autowired
+	private QuestionRepository questionRepository;
 	
 	@PostMapping("/questions")
-	public ModelAndView create(Question question) {	
-		questions.add(question);
-		System.out.println("size : " + questions.size());
-		
+	public ModelAndView create(Question question) {
+		questionRepository.save(question);		
 		return new ModelAndView("redirect:/");
 	}
 	
-	@GetMapping("/questions/{index}")
-	public ModelAndView show(@PathVariable int index) {
+	@GetMapping("/questions/{id}")
+	public ModelAndView show(@PathVariable Long id) {
 		ModelAndView mav = new ModelAndView("qna/show");
-		mav.addObject("question", questions.get(index));
+		mav.addObject("question", questionRepository.findOne(id));
 		return mav;
 	}
 }
